@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function App() {
   return (
     <div className="app">
@@ -15,21 +17,56 @@ const initialItems = [
 ];
 
 function Logo() {
-  return <h1>Far Away 🧳</h1>;
+  return <h1>🏝️ Far Away 🏝️</h1>;
 }
+
 function Form() {
+  const [description, SetDescription] = useState("");
+  const [quantity, SetQuantity] = useState(1);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!description) return;
+
+    const newItem = { description, quantity, packed: false, id: Date.now() };
+    console.log(newItem);
+
+    SetDescription("");
+    SetQuantity(1);
+  }
   return (
-    <div className="add-form">
-      <h3>What do you need for your trip</h3>
-    </div>
+    <form className="add-form" onSubmit={handleSubmit}>
+      <h3>What do you need for your trip 🧳?</h3>
+
+      <select
+        value={quantity}
+        onChange={(e) => SetQuantity(Number(e.target.value))}
+      >
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+
+      <input
+        type="text"
+        placeholder="Item..."
+        value={description}
+        onChange={(event) => SetDescription(event.target.value)}
+      />
+      <button>Add</button>
+    </form>
   );
 }
+
 function PackingList() {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
-          <Item item={item} />
+        {initialItems.map((i) => (
+          <Item item={i} key={i.id} />
         ))}
       </ul>
     </div>
@@ -37,6 +74,7 @@ function PackingList() {
 }
 
 function Item({ item }) {
+  ///same item in <Item item={i} />
   return (
     <li>
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
@@ -50,7 +88,7 @@ function Item({ item }) {
 function Stats() {
   return (
     <footer className="stats">
-      <em>You have </em>
+      <em>Start adding some items to your packing list 🚀 </em>
     </footer>
   );
 }
